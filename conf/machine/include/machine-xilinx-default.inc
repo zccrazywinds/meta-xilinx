@@ -22,15 +22,12 @@ PREFERRED_PROVIDER_virtual/bootloader ??= "${XILINX_DEFAULT_UBOOT}"
 
 UBOOT_SUFFIX ?= "img"
 UBOOT_SUFFIX_zynqmp ?= "bin"
-UBOOT_BINARY ?= "u-boot.${UBOOT_SUFFIX}"
+
+# u-boot-xlnx setups up all zynq configs to have embedded device trees (OF_EMBED=y)
+UBOOT_OFEMBED ?= ""
+UBOOT_OFEMBED_zynq ?= "${@bb.utils.contains('PREFERRED_PROVIDER_virtual/bootloader', 'u-boot-xlnx', '', '-dtb', d)}"
+
+UBOOT_BINARY ?= "u-boot${UBOOT_OFEMBED}.${UBOOT_SUFFIX}"
 UBOOT_ELF ?= "u-boot"
 UBOOT_ELF_aarch64 ?= "u-boot.elf"
-
-# By default use the device-tree recipe to generate device trees for Zynq machines
-MACHINE_ESSENTIAL_EXTRA_RDEPENDS_append_zynq = " device-tree"
-
-# Common Device Tree Includes
-MACHINE_DEVICETREE_append_zynq = " \
-		common/zynq7-base.dtsi \
-		"
 
